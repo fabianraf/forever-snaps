@@ -22,21 +22,29 @@ const s3 = new S3Client({
 });
 
 export async function getPresignedUrl(fileName: string, contentType: string) {
-    const uniqueFileName = `photos/${crypto.randomUUID()}-${fileName}`;
+    const safeName = fileName ? fileName.replace(/[^a-zA-Z0-9.]/g, '_') : `foto_boda_${Date.now()}.jpg`;
+    const safeType = contentType || 'image/jpeg';
 
-    const command = new PutObjectCommand({
-        Bucket: process.env.AWS_S3_BUCKET_NAME!,
-        Key: uniqueFileName,
-        ContentType: contentType,
-    });
+    const uniqueFileName = `photos/${crypto.randomUUID()}-${safeName}`;
 
-    const url = await getSignedUrl(s3, command, { expiresIn: 60 });
+    try {
+        const command = new PutObjectCommand({
+            Bucket: process.env.AWS_S3_BUCKET_NAME!,
+            Key: uniqueFileName,
+            ContentType: safeType,
+        });
 
-    return {
-        url,
-        fileKey: uniqueFileName,
-        publicUrl: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${uniqueFileName}`
-    };
+        const url = await getSignedUrl(s3, command, { expiresIn: 300 });
+
+        return {
+            url,
+            fileKey: uniqueFileName,
+            publicUrl: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${uniqueFileName}`
+        };
+    } catch (backendError) {
+        console.error("Error al generar firma de AWS:", backendError);
+        throw new Error("No se pudo generar el enlace de S3");
+    }
 }
 
 export async function savePhotoRecord(weddingSlug: string, photoUrl: string) {
@@ -54,4 +62,17 @@ export async function savePhotoRecord(weddingSlug: string, photoUrl: string) {
     });
 
     return photo;
+}
+
+export async function getWeddingDetails(slug: string) {
+    try {
+        const wedding = await prisma.wedding.findUnique({
+            where: { slug },
+            select: { names: true }
+        });
+        return wedding;
+    } catch (error) {
+        console.error("Error fetching wedding details:", error);
+        return null;
+    }
 }

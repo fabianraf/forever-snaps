@@ -21,7 +21,7 @@ const s3 = new S3Client({
     },
 });
 
-export async function getPresignedUrl(fileName: string, contentType: string) {
+export const getPresignedUrl = async (fileName: string, contentType: string) => {
     const safeName = fileName ? fileName.replace(/[^a-zA-Z0-9.]/g, '_') : `foto_boda_${Date.now()}.jpg`;
     const safeType = contentType || 'image/jpeg';
 
@@ -47,7 +47,7 @@ export async function getPresignedUrl(fileName: string, contentType: string) {
     }
 }
 
-export async function savePhotoRecord(weddingSlug: string, photoUrl: string) {
+export const savePhotoRecord = async (weddingSlug: string, photoUrl: string) => {
     const wedding = await prisma.wedding.findUnique({
         where: { slug: weddingSlug }
     });
@@ -64,7 +64,7 @@ export async function savePhotoRecord(weddingSlug: string, photoUrl: string) {
     return photo;
 }
 
-export async function getWeddingDetails(slug: string) {
+export const getWeddingDetails = async (slug: string) => {
     try {
         const wedding = await prisma.wedding.findUnique({
             where: { slug },
@@ -74,5 +74,26 @@ export async function getWeddingDetails(slug: string) {
     } catch (error) {
         console.error("Error fetching wedding details:", error);
         return null;
+    }
+}
+
+export const getWeddingPhotos = async (slug: string) => {
+    try {
+        const photos = await prisma.photo.findMany({
+            where: {
+                wedding: { slug: slug }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            select: {
+                id: true,
+                url: true,
+            }
+        });
+        return photos;
+    } catch (error) {
+        console.error("Error obteniendo la galería:", error);
+        return [];
     }
 }

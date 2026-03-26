@@ -20,7 +20,7 @@ export default async function GalleryPage({ params }: PageProps) {
   ]);
 
   if (!weddingDetails) {
-    notFound(); // Dispara el error 404 de Next.js y detiene la ejecución
+    notFound();
   }
 
   return (

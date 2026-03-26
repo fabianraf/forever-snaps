@@ -13,6 +13,7 @@ export const DICTIONARY = {
       VIEW_GALLERY_BTN: "↓ Ver fotos del evento",
       DATE_LOCALE: "es-ES",
       UPLOADING: "Subiendo...",
+      NOT_FOUND: "El slug de la boda no está definido."
     },
     PREVIEW_PAGE: {
       TITLE: "Vista previa",

@@ -5,6 +5,7 @@ import { notFound, useRouter } from "next/navigation";
 import SuccessPage from "../(components)/SuccessPage";
 import PreviewPage from "../(components)/PreviewPage";
 import { DICTIONARY } from "../constants/translations";
+import { useWeddingAlbum } from "../hooks/useWeddingAlbum";
 
 interface PageProps {
   params: Promise<{
@@ -13,99 +14,22 @@ interface PageProps {
 }
 
 const WeddingAlbum = ({ params }: PageProps) => {
-  const [uploading, setUploading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [weddingNames, setWeddingNames] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
-  const [isNotFound, setIsNotFound] = useState(false);
-
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
   const router = useRouter();
-
   const resolvedParams = use(params);
   const slug = resolvedParams.slug;
 
-  const processUploads = async (filesToUpload: File[]) => {
-    setUploading(true);
-    try {
-      for (const file of filesToUpload) {
-        const { url, publicUrl } = await getPresignedUrl(file.name, file.type);
-
-        const uploadResponse = await fetch(url, {
-          method: 'PUT',
-          body: file,
-          headers: {
-            'Content-type': file.type || 'image/jpeg'
-          }
-        });
-
-        if (!uploadResponse.ok) {
-          const textError = await uploadResponse.text();
-          throw new Error(`Fallo S3: ${uploadResponse.status} - ${textError}`);
-        }
-
-        if (!slug) {
-          throw new Error("El slug de la boda no está definido.");
-        }
-        await savePhotoRecord(slug, publicUrl);
-      }
-
-      setSuccess(true);
-    } catch (error) {
-      console.error('Error photo uploading', error);
-      setSuccess(false);
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleCameraSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-    const filesArray = Array.from(files);
-    setSelectedFiles(filesArray);
-
-    const objectURL = URL.createObjectURL(filesArray[0]);
-    setPreviewUrl(objectURL);
-    setSuccess(false);
-    e.target.value = '';
-  }
-
-  const confirmPreviewUpload = async () => {
-    if (selectedFiles.length === 0) return;
-    await processUploads(selectedFiles);
-  }
-
-  const cancelPreview = () => {
-    setSelectedFiles([]);
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl(null);
-    setSuccess(false);
-  }
-
-  const handleGallerySelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-    setSuccess(false);
-    const filesArray = Array.from(files);
-    await processUploads(filesArray);
-    e.target.value = '';
-  }
-
-  useEffect(() => {
-    setMounted(true);
-    const fetchWeddingInfo = async () => {
-      const data = await getWeddingDetails(slug);
-      if (data?.names) {
-        setWeddingNames(data.names);
-      } else {
-        setIsNotFound(true);
-      }
-    };
-    fetchWeddingInfo();
-  }, [slug]);
+  const {
+    isNotFound,
+    success,
+    uploading,
+    previewUrl,
+    weddingNames,
+    mounted,
+    handleCameraSelect,
+    confirmPreviewUpload,
+    cancelPreview,
+    handleGallerySelect
+  } = useWeddingAlbum(slug)
 
   if (isNotFound) {
     notFound();

@@ -3,6 +3,7 @@ import { getWeddingPhotos, getWeddingDetails } from '@/app/actions/photoActions'
 import Link from 'next/link';
 import { getDictionary, Locale } from '@/utils/getDictionary';
 import { notFound } from 'next/navigation';
+import GalleryGrid from './GalleryGrid';
 
 interface PageProps {
   params: Promise<{ lang: Locale; slug: string; }>;
@@ -38,23 +39,7 @@ export default async function GalleryPage({ params }: PageProps) {
             {dictionary.GALLERY_PAGE.UPLOAD_MORE}
           </Link>
         </div>
-
-        {photos.length > 0 ? (
-          <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-            {photos.map((photo) => (
-              <div key={photo.id} className="break-inside-avoid relative group rounded-xl overflow-hidden shadow-sm">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photo.url} alt="Recuerdo de la boda" loading="lazy" className="w-full h-auto object-cover transform transition-transform duration-500 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center text-gray-500 mt-20">
-            <p className="text-xl font-serif">{dictionary.GALLERY_PAGE.EMPTY_STATE}</p>
-            <p className="text-sm opacity-80 mt-2">{dictionary.GALLERY_PAGE.EMPTY_SUBTEXT}</p>
-          </div>
-        )}
+        <GalleryGrid photos={photos} dictionary={dictionary} />
       </main>
     </div>
   );

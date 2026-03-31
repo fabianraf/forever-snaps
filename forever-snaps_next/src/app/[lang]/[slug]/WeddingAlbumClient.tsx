@@ -3,13 +3,13 @@ import React from "react"
 import { notFound, useRouter } from "next/navigation";
 import SuccessPage from "../../(components)/SuccessPage";
 import PreviewPage from "../../(components)/PreviewPage";
-import { DictionaryType } from "../../constants/translations";
+import { DictionaryType as Dictionary } from "../../constants/translations";
 import { useWeddingAlbum } from "../../hooks/useWeddingAlbum";
 
 interface ClientProps {
     slug: string;
     lang: string;
-    dictionary: DictionaryType;
+    dictionary: Dictionary;
 }
 
 const WeddingAlbumClient = ({ slug, lang, dictionary }: ClientProps) => {

@@ -1,12 +1,12 @@
 import { useRouter } from "next/navigation";
-import { DictionaryType } from "../constants/translations";
+import { DictionaryType as Dictionary } from "../constants/translations";
 
 interface SuccessPageProps {
   uploading: boolean;
   handleCameraSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   slug: string;
   lang: string;
-  dictionary: DictionaryType;
+  dictionary: Dictionary;
 }
 
 const SuccessPage = ({ uploading, handleCameraSelect, slug, lang, dictionary }: SuccessPageProps) => {

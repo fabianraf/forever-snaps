@@ -1,6 +1,6 @@
-import { DictionaryType } from "../constants/translations";
+import { DictionaryType as Dictionary } from "../constants/translations";
 
-const PreviewPage = ({ previewUrl, uploading, confirmPreviewUpload, cancelPreview, dictionary }: { previewUrl: string | null; uploading: boolean; confirmPreviewUpload: () => void; cancelPreview: () => void; dictionary: DictionaryType }) => {
+const PreviewPage = ({ previewUrl, uploading, confirmPreviewUpload, cancelPreview, dictionary }: { previewUrl: string | null; uploading: boolean; confirmPreviewUpload: () => void; cancelPreview: () => void; dictionary: Dictionary }) => {
   return (
     <main className="min-h-screen bg-white p-6 flex flex-col items-center justify-center font-sans text-gray-700">
       <div className="bg-white backdrop-blur-md p-6 rounded-3xl shadow-xl border border-gray-300 max-w-sm w-full flex flex-col items-center">

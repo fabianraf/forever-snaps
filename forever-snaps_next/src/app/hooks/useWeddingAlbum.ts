@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { getPresignedUrl, getWeddingDetails, savePhotoRecord } from "../actions/photoActions";
-import { DictionaryType } from "../constants/translations";
+import { DictionaryType as Dictionary} from "../constants/translations";
 
-export const useWeddingAlbum = (slug: string, dictionary: DictionaryType) => {
+export const useWeddingAlbum = (slug: string, dictionary: Dictionary) => {
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [weddingNames, setWeddingNames] = useState<string | null>(null);

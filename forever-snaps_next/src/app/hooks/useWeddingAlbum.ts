@@ -1,14 +1,13 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getPresignedUrl, getWeddingDetails, savePhotoRecord } from "../actions/photoActions";
-import { DICTIONARY } from "../constants/translations";
+import { DictionaryType as Dictionary} from "../constants/translations";
 
-export const useWeddingAlbum = (slug: string) => {
+export const useWeddingAlbum = (slug: string, dictionary: Dictionary) => {
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [weddingNames, setWeddingNames] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
-
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -16,11 +15,8 @@ export const useWeddingAlbum = (slug: string) => {
     setMounted(true);
     const fetchWeddingInfo = async () => {
       const data = await getWeddingDetails(slug);
-      if (data?.names) {
-        setWeddingNames(data.names);
-      } else {
-        setIsNotFound(true);
-      }
+      if (data?.names) setWeddingNames(data.names);
+      else setIsNotFound(true);
     };
     fetchWeddingInfo();
   }, [slug]);
@@ -30,23 +26,15 @@ export const useWeddingAlbum = (slug: string) => {
     try {
       for (const file of filesToUpload) {
         const { url, publicUrl } = await getPresignedUrl(file.name, file.type);
-
         const uploadResponse = await fetch(url, {
           method: 'PUT',
           body: file,
-          headers: {
-            'Content-type': file.type || 'image/jpeg'
-          }
+          headers: { 'Content-type': file.type || 'image/jpeg' }
         });
 
-        if (!uploadResponse.ok) {
-          const textError = await uploadResponse.text();
-          throw new Error(`Fallo S3: ${uploadResponse.status} - ${textError}`);
-        }
+        if (!uploadResponse.ok) throw new Error(`Fallo S3: ${uploadResponse.status}`);
+        if (!slug) throw new Error(dictionary.ALBUM_PAGE.NOT_FOUND);
 
-        if (!slug) {
-          throw new Error(DICTIONARY.ES.ALBUM_PAGE.NOT_FOUND);
-        }
         await savePhotoRecord(slug, publicUrl);
       }
       setSuccess(true);
@@ -63,9 +51,7 @@ export const useWeddingAlbum = (slug: string) => {
     if (!files || files.length === 0) return;
     const filesArray = Array.from(files);
     setSelectedFiles(filesArray);
-
-    const objectURL = URL.createObjectURL(filesArray[0]);
-    setPreviewUrl(objectURL);
+    setPreviewUrl(URL.createObjectURL(filesArray[0]));
     setSuccess(false);
     e.target.value = '';
   }
@@ -86,21 +72,9 @@ export const useWeddingAlbum = (slug: string) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     setSuccess(false);
-    const filesArray = Array.from(files);
-    await processUploads(filesArray);
+    await processUploads(Array.from(files));
     e.target.value = '';
   }
 
-  return {
-    uploading,
-    success,
-    weddingNames,
-    mounted,
-    isNotFound,
-    previewUrl,
-    handleCameraSelect,
-    confirmPreviewUpload,
-    cancelPreview,
-    handleGallerySelect
-  }
+  return { uploading, success, weddingNames, mounted, isNotFound, previewUrl, handleCameraSelect, confirmPreviewUpload, cancelPreview, handleGallerySelect }
 }

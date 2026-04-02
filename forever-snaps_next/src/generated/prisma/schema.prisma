@@ -27,3 +27,10 @@ model Photo {
   wedding   Wedding  @relation(fields: [weddingId], references: [id])
   createdAt DateTime @default(now())
 }
+
+model AdminAuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  email     String
+  createdAt DateTime @default(now())
+}

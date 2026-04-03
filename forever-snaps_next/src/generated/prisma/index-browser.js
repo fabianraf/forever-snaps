@@ -134,6 +134,13 @@ exports.Prisma.PhotoScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.AdminAuditLogScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  email: 'email',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -147,7 +154,8 @@ exports.Prisma.QueryMode = {
 
 exports.Prisma.ModelName = {
   Wedding: 'Wedding',
-  Photo: 'Photo'
+  Photo: 'Photo',
+  AdminAuditLog: 'AdminAuditLog'
 };
 
 /**

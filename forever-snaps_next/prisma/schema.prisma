@@ -18,6 +18,7 @@ model Wedding {
   names     String
   date      DateTime
   photos    Photo[]
+  settings  WeddingSettings?
 }
 
 model Photo {
@@ -33,4 +34,17 @@ model AdminAuditLog {
   action    String
   email     String
   createdAt DateTime @default(now())
+}
+
+model WeddingSettings {
+  id                 String   @id @default(uuid())
+  weddingId          String   @unique
+  wedding            Wedding  @relation(fields: [weddingId], references: [id])  
+  backgroundImageUrl String?
+  mainGreeting       String?
+  secondaryText      String?
+  primaryCtaLabel    String?
+  secondaryCtaLabel  String?  
+  updatedAt          DateTime @updatedAt
+  updatedBy          String?
 }

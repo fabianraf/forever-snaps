@@ -13,7 +13,7 @@ interface ClientProps {
     settings?: any;
 }
 
-const WeddingAlbumClient = ({ slug, lang, dictionary }: ClientProps) => {
+const WeddingAlbumClient = ({ slug, lang, dictionary, settings }: ClientProps) => {
     const router = useRouter();
     const { isNotFound, success, uploading, previewUrl, weddingNames, mounted, handleCameraSelect, confirmPreviewUpload, cancelPreview, handleGallerySelect } = useWeddingAlbum(slug, dictionary)
 

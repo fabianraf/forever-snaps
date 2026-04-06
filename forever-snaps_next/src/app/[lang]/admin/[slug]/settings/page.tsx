@@ -1,11 +1,17 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { getWeddingSettings, updateWeddingSettings } from "@/app/actions/settingsActions";
 import { getPresignedUrl } from "@/app/actions/photoActions";
 import { useRouter } from "next/navigation";
 
-const SettingsAdminPage = ({ params }: { params: { slug: string, lang: string } }) => {
+interface SettingsPageProps {
+  params: Promise<{ slug: string, lang: string }>;
+}
+
+export default function SettingsAdminPage({ params }: SettingsPageProps) {  
+  const resolvedParams = use(params);
+  const slug = resolvedParams.slug;
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -19,8 +25,8 @@ const SettingsAdminPage = ({ params }: { params: { slug: string, lang: string } 
     backgroundImageUrl: '',
   });
 
-  useEffect(() => {
-    getWeddingSettings(params.slug).then(data => {
+  useEffect(() => {    
+    getWeddingSettings(slug).then(data => {
       if (data) {
         setFormData({
           mainGreeting: data.mainGreeting || '',
@@ -32,7 +38,7 @@ const SettingsAdminPage = ({ params }: { params: { slug: string, lang: string } 
       }
       setLoading(false);
     });
-  }, [params.slug]);
+  }, [slug]); 
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -54,7 +60,7 @@ const SettingsAdminPage = ({ params }: { params: { slug: string, lang: string } 
     setSaving(true);
     setMessage('');
     try {
-      await updateWeddingSettings(params.slug, formData);
+      await updateWeddingSettings(slug, formData);
       setMessage('¡Configuración guardada con éxito!');
       router.refresh();
     } catch (error) {
@@ -69,15 +75,13 @@ const SettingsAdminPage = ({ params }: { params: { slug: string, lang: string } 
   return (
     <main className="min-h-screen bg-gray-100 p-8 text-gray-800">
       <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-md">
-        <h1 className="text-2xl font-bold mb-6">Configurar Welcome Page: {params.slug}</h1>
-
+        <h1 className="text-2xl font-bold mb-6">Configurar Welcome Page: {slug}</h1>
         {message && <div className="mb-4 p-3 bg-blue-100 text-blue-800 rounded">{message}</div>}
-
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block font-medium mb-1">Imagen de Fondo (Opcional)</label>
             {formData.backgroundImageUrl && (
-
+              
               <img src={formData.backgroundImageUrl} alt="Fondo actual" className="h-32 object-cover rounded mb-2 shadow" />
             )}
             <input type="file" accept="image/*" onChange={handleImageUpload} disabled={saving} className="text-sm" />
@@ -116,5 +120,3 @@ const SettingsAdminPage = ({ params }: { params: { slug: string, lang: string } 
     </main>
   );
 }
-
-export default SettingsAdminPage;

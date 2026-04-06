@@ -31,19 +31,19 @@ export const getWeddingSettings = async (slug: string) => {
   return wedding?.settings || null;
 }
 
-export const updateWeddingSettings = async (slug: string, formData: {
+export async function updateWeddingSettings(slug: string, formData: {
   mainGreeting?: string;
   secondaryText?: string;
   primaryCtaLabel?: string;
   secondaryCtaLabel?: string;
   backgroundImageUrl?: string;
-}) => {
+}) {
   const adminEmail = await getAdminEmail();
-  if (!adminEmail) throw new Error("No autorizado");
+  if (!adminEmail) return { error: "No autorizado" };
 
   const wedding = await prisma.wedding.findUnique({ where: { slug } });
-  if (!wedding) throw new Error("Boda no encontrada");
-  
+  if (!wedding) return { error: "Boda no encontrada" };
+
   const sanitize = (val?: string) => (val && val.trim() !== '') ? val.trim() : null;
 
   const updatedSettings = await prisma.weddingSettings.upsert({
@@ -66,5 +66,5 @@ export const updateWeddingSettings = async (slug: string, formData: {
       updatedBy: adminEmail,
     }
   });
-  return updatedSettings;
+  return { success: true, data: updatedSettings };
 }

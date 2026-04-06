@@ -37,7 +37,7 @@ const WeddingAlbumClient = ({ slug, lang, dictionary, settings }: ClientProps) =
                     {weddingNames ? <h1 className="text-3xl font-serif font-bold text-center">{settings?.mainGreeting || weddingNames}</h1> : <div className="h-8 w-48 bg-[#e8d5d1] animate-pulse rounded-md"></div>}
                 </div>
                 <p className="min-h-[24px] text-start">
-                    {mounted ? new Date(2026, 3, 25).toLocaleDateString(dictionary.ALBUM_PAGE.DATE_LOCALE, { day: 'numeric', month: 'long', year: 'numeric' }) : ""}
+                    {mounted ? new Date(2026, 3, 10).toLocaleDateString(dictionary.ALBUM_PAGE.DATE_LOCALE, { day: 'numeric', month: 'long', year: 'numeric' }) : ""}
                 </p>
                 <p className="text-[#7b6f6a] text-sm mb-8 text-start">{dictionary.ALBUM_PAGE.DESCRIPTION}</p>
 

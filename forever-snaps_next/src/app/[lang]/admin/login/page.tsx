@@ -24,12 +24,11 @@ export default function AdminLoginPage({ params }: LoginPageProps) {
     setError('');
 
     const result = await loginAdmin(email, password);
-
     if (result.error) {
       setError(result.error);
       setLoading(false);
-    } else {
-      router.push(`/${lang}/admin/dashboard`);
+    } else {      
+      router.push(`/${lang}/admin/${result.slug}/settings`);
     }
   };
 

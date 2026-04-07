@@ -43,7 +43,7 @@ export const loginAdmin = async (email: string, password: string) => {
   });
 
   const wedding = await prisma.wedding.findFirst();
-  const targetSlug = wedding?.slug || "sharon_wedding";
+  const targetSlug = 'andres_daniela';
 
   return { success: true, slug: targetSlug };
 }

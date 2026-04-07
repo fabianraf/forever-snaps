@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getPresignedUrl, getWeddingDetails, savePhotoRecord } from "../actions/photoActions";
-import { DictionaryType as Dictionary} from "../constants/translations";
+import { DictionaryType as Dictionary } from "../constants/translations";
+import imageCompression from "browser-image-compression";
 
 export const useWeddingAlbum = (slug: string, dictionary: Dictionary) => {
   const [uploading, setUploading] = useState(false);
@@ -24,12 +25,25 @@ export const useWeddingAlbum = (slug: string, dictionary: Dictionary) => {
   const processUploads = async (filesToUpload: File[]) => {
     setUploading(true);
     try {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+        fileType: 'image/jpeg',
+      };
+
       for (const file of filesToUpload) {
-        const { url, publicUrl } = await getPresignedUrl(file.name, file.type);
+        const compressedBlob = await imageCompression(file, options);
+        const compressedFile = new File([compressedBlob], file.name, {
+          type: 'image/jpeg',
+          lastModified: Date.now(),
+        });
+
+        const { url, publicUrl } = await getPresignedUrl(compressedFile.name, compressedFile.type);
         const uploadResponse = await fetch(url, {
           method: 'PUT',
-          body: file,
-          headers: { 'Content-type': file.type || 'image/jpeg' }
+          body: compressedFile,
+          headers: { 'Content-type': compressedFile.type || 'image/jpeg' }
         });
 
         if (!uploadResponse.ok) throw new Error(`Fallo S3: ${uploadResponse.status}`);

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getDictionary, Locale } from '@/utils/getDictionary';
 import { notFound } from 'next/navigation';
 import GalleryGrid from './GalleryGrid';
+import DownloadAllButton from './DownloadAllButton';
 
 interface PageProps {
   params: Promise<{ lang: Locale; slug: string; }>;
@@ -34,8 +35,8 @@ export default async function GalleryPage({ params }: PageProps) {
           </p>
         </div>
 
-        <div className="flex justify-center mb-8">
-          <Link href={`/${lang}/${slug}`} className="bg-white text-[#7b6f6a] px-6 py-2 rounded-full font-semibold shadow-md active:scale-95 transition-transform">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
+          <Link href={`/${lang}/${slug}`} className="bg-white border border-gray-300 text-[#7b6f6a] px-6 py-2 rounded-full font-semibold shadow-sm hover:shadow-md active:scale-95 transition-all text-center">
             {dictionary.GALLERY_PAGE.UPLOAD_MORE}
           </Link>
         </div>

@@ -141,6 +141,18 @@ exports.Prisma.AdminAuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.WeddingSettingsScalarFieldEnum = {
+  id: 'id',
+  weddingId: 'weddingId',
+  backgroundImageUrl: 'backgroundImageUrl',
+  mainGreeting: 'mainGreeting',
+  secondaryText: 'secondaryText',
+  primaryCtaLabel: 'primaryCtaLabel',
+  secondaryCtaLabel: 'secondaryCtaLabel',
+  updatedAt: 'updatedAt',
+  updatedBy: 'updatedBy'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -151,11 +163,17 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 
 exports.Prisma.ModelName = {
   Wedding: 'Wedding',
   Photo: 'Photo',
-  AdminAuditLog: 'AdminAuditLog'
+  AdminAuditLog: 'AdminAuditLog',
+  WeddingSettings: 'WeddingSettings'
 };
 
 /**

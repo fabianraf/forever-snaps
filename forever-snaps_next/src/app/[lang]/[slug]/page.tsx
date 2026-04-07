@@ -1,13 +1,26 @@
 import { getDictionary, Locale } from "@/utils/getDictionary";
 import WeddingAlbumClient from "./WeddingAlbumClient";
+import { notFound } from "next/navigation";
+import { getWeddingSettings } from "@/app/actions/settingsActions";
 
 interface PageProps {
   params: Promise<{ lang: Locale; slug: string; }>;
 }
 
-export default async function Page({ params }: PageProps) {
+const WeddingAlbumPage = async ({ params }: PageProps) => {
   const resolvedParams = await params;
-  const dictionary = await getDictionary(resolvedParams.lang);
+  if (!resolvedParams.slug) notFound();
 
-  return <WeddingAlbumClient slug={resolvedParams.slug} lang={resolvedParams.lang} dictionary={dictionary} />;
+  const dictionary = await getDictionary(resolvedParams.lang);  
+  const settings = await getWeddingSettings(resolvedParams.slug);
+  return (
+    <WeddingAlbumClient
+      slug={resolvedParams.slug}
+      lang={resolvedParams.lang}
+      dictionary={dictionary}
+      settings={settings} 
+    />
+  );
 }
+
+export default WeddingAlbumPage;

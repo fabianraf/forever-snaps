@@ -24,71 +24,72 @@ const WeddingAlbumClient = ({ slug, lang, dictionary, settings }: ClientProps) =
 
   return (
     <main
-      className="min-h-screen bg-[#AD9B99] p-6 flex flex-col items-center justify-center font-sans text-white relative"
+      className="feral-page p-6 sm:p-10 flex flex-col items-center justify-center font-sans text-feral-ink relative"
       style={settings?.backgroundImageUrl ? {
         backgroundImage: `url(${settings.backgroundImageUrl})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
-      } : {}}
+      } : undefined}
     >
-      {/* Capa oscura de fondo */}
-      {settings?.backgroundImageUrl && <div className="absolute inset-0 bg-black/40 z-0"></div>}
+      {settings?.backgroundImageUrl && <div className="feral-page-overlay" aria-hidden />}
 
-      {/* Contenedor de la tarjeta */}
-      <div className="backdrop-blur-md p-8 rounded-3xl shadow-xl border border-white/50 max-w-sm w-full text-center z-10 mt-auto mb-auto">
-        <div className="flex justify-center mb-4 items-center">
+      <div className="feral-card p-8 sm:p-10 max-w-md w-full text-center mt-auto mb-auto">
+        <div className="flex justify-center mb-5 items-center">
           {weddingNames ? (
-            <h1 className="text-3xl font-serif font-bold text-center">
+            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-center text-feral-ink leading-tight">
               {settings?.mainGreeting || weddingNames}
             </h1>
           ) : (
-            <div className="h-8 w-48 bg-[#e8d5d1] animate-pulse rounded-md"></div>
+            <div className="h-9 w-48 bg-feral-cream animate-pulse rounded-full" />
           )}
         </div>
 
-        <p className="text-start text-[#978C12] font-bold mb-4">
+        <p className="text-center text-feral-orange font-semibold tracking-wide mb-5">
           {mounted && weddingDateFormatted ? weddingDateFormatted : ""}
         </p>
 
-        <p className="text-gray-200 text-sm mb-6 text-start whitespace-pre-line leading-relaxed">
+        <p className="text-feral-body text-sm sm:text-[0.9375rem] mb-8 text-center whitespace-pre-line leading-relaxed">
           {uploading ? dictionary.ALBUM_PAGE.UPLOADING : (settings?.secondaryText || dictionary.ALBUM_PAGE.DESCRIPTION)}
         </p>
 
-        <div className="my-2">
-          <input type="file" accept="image/*" capture="environment" id="cameraInput" className="hidden" onChange={handleCameraSelect} disabled={uploading} />
-          <label htmlFor="cameraInput" className={`block w-full py-4 rounded-2xl text-white font-semibold cursor-pointer transition-all ${uploading ? 'bg-gray-400' : 'border border-white hover:bg-white/10'}`}>
-            {uploading
-              ? `📸 ${dictionary.ALBUM_PAGE.UPLOADING}`
-              : `📸 ${settings?.primaryCtaLabel || dictionary.ALBUM_PAGE.TAKE_PHOTO}`
-            }
-          </label>
-        </div>
+        <div className="space-y-3">
+          <div>
+            <input type="file" accept="image/*" capture="environment" id="cameraInput" className="hidden" onChange={handleCameraSelect} disabled={uploading} />
+            <label htmlFor="cameraInput" className={uploading ? "btn-feral-primary opacity-60 pointer-events-none" : "btn-feral-primary"}>
+              {uploading
+                ? `📸 ${dictionary.ALBUM_PAGE.UPLOADING}`
+                : `📸 ${settings?.primaryCtaLabel || dictionary.ALBUM_PAGE.TAKE_PHOTO}`
+              }
+            </label>
+          </div>
 
-        <div className="my-2">
-          <input type="file" accept="image/*" id="galeryInput" className="hidden" onChange={handleGallerySelect} disabled={uploading} multiple />
-          <label htmlFor="galeryInput" className={`block w-full py-4 rounded-2xl text-black font-semibold cursor-pointer transition-all ${uploading ? 'bg-gray-400' : 'bg-[#978C12] hover:bg-[#857b0f]'}`}>
-            {uploading
-              ? `🖼️ ${dictionary.ALBUM_PAGE.UPLOADING}`
-              : `🖼️ ${settings?.secondaryCtaLabel || dictionary.ALBUM_PAGE.UPLOAD_GALLERY}`}
-          </label>
-        </div>
+          <div>
+            <input type="file" accept="image/*" id="galeryInput" className="hidden" onChange={handleGallerySelect} disabled={uploading} multiple />
+            <label htmlFor="galeryInput" className={uploading ? "btn-feral-secondary opacity-60 pointer-events-none" : "btn-feral-secondary"}>
+              {uploading
+                ? `🖼️ ${dictionary.ALBUM_PAGE.UPLOADING}`
+                : `🖼️ ${settings?.secondaryCtaLabel || dictionary.ALBUM_PAGE.UPLOAD_GALLERY}`}
+            </label>
+          </div>
 
-        <div className="my-4">
-          <button type="button" onClick={() => router.push(`/${lang}/${slug}/gallery`)} className="block w-full py-4 rounded-2xl bg-transparent text-white cursor-pointer transition-all active:scale-95 hover:bg-white/5 border border-transparent">
+          <button
+            type="button"
+            onClick={() => router.push(`/${lang}/${slug}/gallery`)}
+            className="btn-feral-ghost"
+          >
             {dictionary.ALBUM_PAGE.VIEW_GALLERY_BTN}
           </button>
         </div>
       </div>
 
-      {/* Footer reposicionado y elevado en Z */}
-      <footer className="w-full py-4 mt-auto text-center z-10">
+      <footer className="w-full py-6 mt-auto text-center relative z-10">
         <a
           href="https://www.senirop.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-medium text-gray-300 hover:text-white transition-colors drop-shadow-md"
+          className="text-sm font-medium text-feral-muted hover:text-feral-orange transition-colors"
         >
-          Senirop - {new Date().getFullYear()}
+          Senirop — {new Date().getFullYear()}
         </a>
       </footer>
     </main>

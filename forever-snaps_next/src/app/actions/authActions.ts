@@ -42,8 +42,8 @@ export const loginAdmin = async (email: string, password: string) => {
     data: { action: "LOGIN", email }
   });
 
-  const wedding = await prisma.wedding.findFirst();
-  const targetSlug = 'andres_daniela';
+  const wedding = await prisma.wedding.findUnique({ where: { slug: "shali-jonathan" } });
+  const targetSlug = wedding?.slug ?? "shali-jonathan";
 
   return { success: true, slug: targetSlug };
 }

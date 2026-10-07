@@ -8,7 +8,8 @@ import { PrismaClient } from "../src/generated/prisma";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-const SLUG = "shali-jhonatan";
+const OLD_SLUG = "shali-jhonatan";
+const SLUG = "shali-jonathan";
 
 const SECONDARY_TEXT = `Nuestro amor se ve a través de sus ojos
 
@@ -30,8 +31,17 @@ async function main() {
   const adapter = new PrismaPg(pool as any);
   const prisma = new PrismaClient({ adapter });
 
+  const legacy = await prisma.wedding.findUnique({ where: { slug: OLD_SLUG } });
+  if (legacy) {
+    await prisma.wedding.update({
+      where: { id: legacy.id },
+      data: { slug: SLUG },
+    });
+    console.log(`Renamed slug "${OLD_SLUG}" → "${SLUG}".`);
+  }
+
   const weddingData = {
-    names: "ShaLi y Jhonatan",
+    names: "ShaLi y Jonathan",
     date: new Date("2026-10-10T00:00:00.000Z"),
   };
 

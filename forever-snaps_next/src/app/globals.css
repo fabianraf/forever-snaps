@@ -1,26 +1,153 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --feral-cream: #fcfaf2;
+  --feral-cream-glow: #fffef9;
+  --feral-orange: #9d7651;
+  --feral-orange-hover: #856544;
+  --feral-accent-rgb: 157, 118, 81;
+  --feral-ink: #1a1a1a;
+  --feral-body: #555555;
+  --feral-muted: #888888;
+  --background: var(--feral-cream);
+  --foreground: var(--feral-ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-feral-cream: var(--feral-cream);
+  --color-feral-orange: var(--feral-orange);
+  --color-feral-orange-hover: var(--feral-orange-hover);
+  --color-feral-ink: var(--feral-ink);
+  --color-feral-body: var(--feral-body);
+  --color-feral-muted: var(--feral-muted);
   --font-sans: var(--font-geist-sans);
+  --font-serif: var(--font-playfair);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Fondo cálido con brillo central y destellos sutiles */
+.feral-page {
+  position: relative;
+  min-height: 100vh;
+  background-color: var(--feral-cream);
+  background-image: radial-gradient(
+    ellipse 80% 60% at 50% 35%,
+    var(--feral-cream-glow) 0%,
+    var(--feral-cream) 65%
+  );
+}
+
+.feral-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    rgba(var(--feral-accent-rgb), 0.12) 1px,
+    transparent 1px
+  );
+  background-size: 56px 56px;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.feral-page-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(252, 250, 242, 0.88);
+  z-index: 0;
+}
+
+.feral-card {
+  position: relative;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(var(--feral-accent-rgb), 0.12);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 4px 24px rgba(26, 26, 26, 0.06),
+    0 1px 3px rgba(26, 26, 26, 0.04);
+}
+
+.btn-feral-primary {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  background-color: var(--feral-orange);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(var(--feral-accent-rgb), 0.25);
+}
+
+.btn-feral-primary:hover:not(:disabled) {
+  background-color: var(--feral-orange-hover);
+}
+
+.btn-feral-primary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-feral-primary:disabled {
+  background-color: #ccc;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.btn-feral-secondary {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  background-color: #fff;
+  color: var(--feral-orange);
+  border: 2px solid rgba(var(--feral-accent-rgb), 0.45);
+}
+
+.btn-feral-secondary:hover:not(:disabled) {
+  background-color: rgba(var(--feral-accent-rgb), 0.06);
+}
+
+.btn-feral-secondary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-feral-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-feral-ghost {
+  display: block;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-align: center;
+  cursor: pointer;
+  color: var(--feral-orange);
+  background: transparent;
+  border: none;
+  transition: opacity 0.15s ease;
+}
+
+.btn-feral-ghost:hover {
+  opacity: 0.75;
 }

@@ -39,9 +39,9 @@ export default function GalleryGrid({ photos, dictionary }: GalleryGridProps) {
           ))}
         </div>
       ) : (
-        <div className="text-center text-gray-500 mt-20">
-          <p className="text-xl font-serif">{dictionary.GALLERY_PAGE.EMPTY_STATE}</p>
-          <p className="text-sm opacity-80 mt-2">{dictionary.GALLERY_PAGE.EMPTY_SUBTEXT}</p>
+        <div className="text-center text-feral-muted mt-20">
+          <p className="text-xl font-serif text-feral-ink">{dictionary.GALLERY_PAGE.EMPTY_STATE}</p>
+          <p className="text-sm text-feral-body mt-2">{dictionary.GALLERY_PAGE.EMPTY_SUBTEXT}</p>
         </div>
       )}
 

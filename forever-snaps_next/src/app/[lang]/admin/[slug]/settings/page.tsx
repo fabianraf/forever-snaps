@@ -117,10 +117,10 @@ export default function SettingsAdminPage({ params }: SettingsPageProps) {
   if (loading) return <div className="p-8 text-center">Cargando...</div>;
 
   return (
-    <main className="min-h-screen bg-gray-100 p-8 text-gray-800">
+    <main className="feral-page min-h-screen p-8 text-feral-ink relative z-10">
       <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex flex-col sm:flex-row justify-between items-center bg-white p-6 rounded-xl shadow-md">
-          <h1 className="text-2xl font-bold mb-4 sm:mb-0">Panel de Control: {slug}</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-center feral-card p-6">
+          <h1 className="text-2xl font-serif font-bold mb-4 sm:mb-0">Panel de Control: {slug}</h1>
           <button
             onClick={handleLogout}
             className="bg-red-100 text-red-600 px-4 py-2 rounded-lg font-bold hover:bg-red-200 transition cursor-pointer"
@@ -129,7 +129,7 @@ export default function SettingsAdminPage({ params }: SettingsPageProps) {
           </button>
         </div>
 
-        <div className="bg-white p-8 rounded-xl shadow-md">
+        <div className="feral-card p-8">
           {message && <div className="mb-4 p-3 bg-blue-100 text-blue-800 rounded">{message}</div>}
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -166,13 +166,13 @@ export default function SettingsAdminPage({ params }: SettingsPageProps) {
               </div>
             </div>
 
-            <button type="submit" disabled={saving} className="w-full bg-black text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition cursor-pointer">
+            <button type="submit" disabled={saving} className="w-full bg-feral-orange text-white py-3 rounded-full font-bold hover:bg-feral-orange-hover transition cursor-pointer shadow-md shadow-feral-orange/20">
               {saving ? 'Guardando...' : 'Guardar Cambios'}
             </button>
           </form>
         </div>
 
-        <div className="bg-white p-8 rounded-xl shadow-md">
+        <div className="feral-card p-8">
           <h2 className="text-2xl font-bold mb-6 border-b pb-2">Moderación de Fotos ({photos.length})</h2>
 
           {photos.length === 0 ? (

@@ -149,7 +149,7 @@ export default function SettingsAdminPage({ params }: SettingsPageProps) {
 
             <div>
               <label className="block font-medium mb-1">Texto Secundario</label>
-              <textarea className="w-full border p-2 rounded" rows={3} placeholder="Comparte tus momentos con nosotros..."
+              <textarea className="w-full border p-2 rounded" rows={8} placeholder="Comparte tus momentos con nosotros..."
                 value={formData.secondaryText} onChange={e => setFormData({ ...formData, secondaryText: e.target.value })} />
             </div>
 

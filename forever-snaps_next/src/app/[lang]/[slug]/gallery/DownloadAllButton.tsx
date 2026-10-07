@@ -62,7 +62,7 @@ export default function DownloadAllButton({ photos, label }: DownloadButtonProps
     <button
       onClick={handleDownload}
       disabled={isDownloading || photos.length === 0}
-      className="bg-gray-800 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-gray-900 active:scale-95 transition-all disabled:bg-gray-400 disabled:active:scale-100 flex items-center justify-center min-w-[200px]"
+      className="hidden bg-gray-800 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-gray-900 active:scale-95 transition-all disabled:bg-gray-400 disabled:active:scale-100 flex items-center justify-center min-w-[200px]"
     >
       {isDownloading ? `Comprimiendo... ${progress}%` : label}
     </button>

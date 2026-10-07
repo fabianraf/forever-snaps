@@ -72,7 +72,7 @@ export const getWeddingDetails = async (slug: string) => {
   try {
     const wedding = await prisma.wedding.findUnique({
       where: { slug },
-      select: { names: true }
+      select: { names: true, date: true }
     });
     return wedding;
   } catch (error) {

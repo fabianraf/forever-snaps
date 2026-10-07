@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { getPresignedUrl, getWeddingDetails, savePhotoRecord } from "../actions/photoActions";
 import { DictionaryType as Dictionary } from "../constants/translations";
+import { formatWeddingDate } from "@/utils/formatWeddingDate";
 import imageCompression from "browser-image-compression";
 
 export const useWeddingAlbum = (slug: string, dictionary: Dictionary) => {
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [weddingNames, setWeddingNames] = useState<string | null>(null);
+  const [weddingDateFormatted, setWeddingDateFormatted] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -16,8 +18,10 @@ export const useWeddingAlbum = (slug: string, dictionary: Dictionary) => {
     setMounted(true);
     const fetchWeddingInfo = async () => {
       const data = await getWeddingDetails(slug);
-      if (data?.names) setWeddingNames(data.names);
-      else setIsNotFound(true);
+      if (data?.names) {
+        setWeddingNames(data.names);
+        if (data.date) setWeddingDateFormatted(formatWeddingDate(data.date));
+      } else setIsNotFound(true);
     };
     fetchWeddingInfo();
   }, [slug]);
@@ -90,5 +94,5 @@ export const useWeddingAlbum = (slug: string, dictionary: Dictionary) => {
     e.target.value = '';
   }
 
-  return { uploading, success, weddingNames, mounted, isNotFound, previewUrl, handleCameraSelect, confirmPreviewUpload, cancelPreview, handleGallerySelect }
+  return { uploading, success, weddingNames, weddingDateFormatted, mounted, isNotFound, previewUrl, handleCameraSelect, confirmPreviewUpload, cancelPreview, handleGallerySelect }
 }

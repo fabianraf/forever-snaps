@@ -6,8 +6,9 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 
-const connectionString = process.env.DATABASE_URL;
-const pool = new Pool({ connectionString });
+import { getPgConnectionString } from "@/lib/pgConnectionString";
+
+const pool = new Pool({ connectionString: getPgConnectionString() });
 const adapter = new PrismaPg(pool as any);
 const prisma = new PrismaClient({ adapter });
 

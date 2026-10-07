@@ -2267,6 +2267,7 @@ export namespace Prisma {
   export type PhotoMinAggregateOutputType = {
     id: string | null
     url: string | null
+    displayUrl: string | null
     weddingId: string | null
     createdAt: Date | null
   }
@@ -2274,6 +2275,7 @@ export namespace Prisma {
   export type PhotoMaxAggregateOutputType = {
     id: string | null
     url: string | null
+    displayUrl: string | null
     weddingId: string | null
     createdAt: Date | null
   }
@@ -2281,6 +2283,7 @@ export namespace Prisma {
   export type PhotoCountAggregateOutputType = {
     id: number
     url: number
+    displayUrl: number
     weddingId: number
     createdAt: number
     _all: number
@@ -2290,6 +2293,7 @@ export namespace Prisma {
   export type PhotoMinAggregateInputType = {
     id?: true
     url?: true
+    displayUrl?: true
     weddingId?: true
     createdAt?: true
   }
@@ -2297,6 +2301,7 @@ export namespace Prisma {
   export type PhotoMaxAggregateInputType = {
     id?: true
     url?: true
+    displayUrl?: true
     weddingId?: true
     createdAt?: true
   }
@@ -2304,6 +2309,7 @@ export namespace Prisma {
   export type PhotoCountAggregateInputType = {
     id?: true
     url?: true
+    displayUrl?: true
     weddingId?: true
     createdAt?: true
     _all?: true
@@ -2384,6 +2390,7 @@ export namespace Prisma {
   export type PhotoGroupByOutputType = {
     id: string
     url: string
+    displayUrl: string | null
     weddingId: string
     createdAt: Date
     _count: PhotoCountAggregateOutputType | null
@@ -2408,6 +2415,7 @@ export namespace Prisma {
   export type PhotoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     url?: boolean
+    displayUrl?: boolean
     weddingId?: boolean
     createdAt?: boolean
     wedding?: boolean | WeddingDefaultArgs<ExtArgs>
@@ -2416,6 +2424,7 @@ export namespace Prisma {
   export type PhotoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     url?: boolean
+    displayUrl?: boolean
     weddingId?: boolean
     createdAt?: boolean
     wedding?: boolean | WeddingDefaultArgs<ExtArgs>
@@ -2424,6 +2433,7 @@ export namespace Prisma {
   export type PhotoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     url?: boolean
+    displayUrl?: boolean
     weddingId?: boolean
     createdAt?: boolean
     wedding?: boolean | WeddingDefaultArgs<ExtArgs>
@@ -2432,11 +2442,12 @@ export namespace Prisma {
   export type PhotoSelectScalar = {
     id?: boolean
     url?: boolean
+    displayUrl?: boolean
     weddingId?: boolean
     createdAt?: boolean
   }
 
-  export type PhotoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "url" | "weddingId" | "createdAt", ExtArgs["result"]["photo"]>
+  export type PhotoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "url" | "displayUrl" | "weddingId" | "createdAt", ExtArgs["result"]["photo"]>
   export type PhotoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     wedding?: boolean | WeddingDefaultArgs<ExtArgs>
   }
@@ -2455,6 +2466,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       url: string
+      displayUrl: string | null
       weddingId: string
       createdAt: Date
     }, ExtArgs["result"]["photo"]>
@@ -2883,6 +2895,7 @@ export namespace Prisma {
   interface PhotoFieldRefs {
     readonly id: FieldRef<"Photo", 'String'>
     readonly url: FieldRef<"Photo", 'String'>
+    readonly displayUrl: FieldRef<"Photo", 'String'>
     readonly weddingId: FieldRef<"Photo", 'String'>
     readonly createdAt: FieldRef<"Photo", 'DateTime'>
   }
@@ -5433,6 +5446,7 @@ export namespace Prisma {
   export const PhotoScalarFieldEnum: {
     id: 'id',
     url: 'url',
+    displayUrl: 'displayUrl',
     weddingId: 'weddingId',
     createdAt: 'createdAt'
   };
@@ -5598,6 +5612,7 @@ export namespace Prisma {
     NOT?: PhotoWhereInput | PhotoWhereInput[]
     id?: StringFilter<"Photo"> | string
     url?: StringFilter<"Photo"> | string
+    displayUrl?: StringNullableFilter<"Photo"> | string | null
     weddingId?: StringFilter<"Photo"> | string
     createdAt?: DateTimeFilter<"Photo"> | Date | string
     wedding?: XOR<WeddingScalarRelationFilter, WeddingWhereInput>
@@ -5606,6 +5621,7 @@ export namespace Prisma {
   export type PhotoOrderByWithRelationInput = {
     id?: SortOrder
     url?: SortOrder
+    displayUrl?: SortOrderInput | SortOrder
     weddingId?: SortOrder
     createdAt?: SortOrder
     wedding?: WeddingOrderByWithRelationInput
@@ -5617,6 +5633,7 @@ export namespace Prisma {
     OR?: PhotoWhereInput[]
     NOT?: PhotoWhereInput | PhotoWhereInput[]
     url?: StringFilter<"Photo"> | string
+    displayUrl?: StringNullableFilter<"Photo"> | string | null
     weddingId?: StringFilter<"Photo"> | string
     createdAt?: DateTimeFilter<"Photo"> | Date | string
     wedding?: XOR<WeddingScalarRelationFilter, WeddingWhereInput>
@@ -5625,6 +5642,7 @@ export namespace Prisma {
   export type PhotoOrderByWithAggregationInput = {
     id?: SortOrder
     url?: SortOrder
+    displayUrl?: SortOrderInput | SortOrder
     weddingId?: SortOrder
     createdAt?: SortOrder
     _count?: PhotoCountOrderByAggregateInput
@@ -5638,6 +5656,7 @@ export namespace Prisma {
     NOT?: PhotoScalarWhereWithAggregatesInput | PhotoScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Photo"> | string
     url?: StringWithAggregatesFilter<"Photo"> | string
+    displayUrl?: StringNullableWithAggregatesFilter<"Photo"> | string | null
     weddingId?: StringWithAggregatesFilter<"Photo"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Photo"> | Date | string
   }
@@ -5824,6 +5843,7 @@ export namespace Prisma {
   export type PhotoCreateInput = {
     id?: string
     url: string
+    displayUrl?: string | null
     createdAt?: Date | string
     wedding: WeddingCreateNestedOneWithoutPhotosInput
   }
@@ -5831,6 +5851,7 @@ export namespace Prisma {
   export type PhotoUncheckedCreateInput = {
     id?: string
     url: string
+    displayUrl?: string | null
     weddingId: string
     createdAt?: Date | string
   }
@@ -5838,6 +5859,7 @@ export namespace Prisma {
   export type PhotoUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    displayUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     wedding?: WeddingUpdateOneRequiredWithoutPhotosNestedInput
   }
@@ -5845,6 +5867,7 @@ export namespace Prisma {
   export type PhotoUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    displayUrl?: NullableStringFieldUpdateOperationsInput | string | null
     weddingId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -5852,6 +5875,7 @@ export namespace Prisma {
   export type PhotoCreateManyInput = {
     id?: string
     url: string
+    displayUrl?: string | null
     weddingId: string
     createdAt?: Date | string
   }
@@ -5859,12 +5883,14 @@ export namespace Prisma {
   export type PhotoUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    displayUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PhotoUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    displayUrl?: NullableStringFieldUpdateOperationsInput | string | null
     weddingId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6095,14 +6121,35 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type WeddingScalarRelationFilter = {
     is?: WeddingWhereInput
     isNot?: WeddingWhereInput
   }
 
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type PhotoCountOrderByAggregateInput = {
     id?: SortOrder
     url?: SortOrder
+    displayUrl?: SortOrder
     weddingId?: SortOrder
     createdAt?: SortOrder
   }
@@ -6110,6 +6157,7 @@ export namespace Prisma {
   export type PhotoMaxOrderByAggregateInput = {
     id?: SortOrder
     url?: SortOrder
+    displayUrl?: SortOrder
     weddingId?: SortOrder
     createdAt?: SortOrder
   }
@@ -6117,8 +6165,27 @@ export namespace Prisma {
   export type PhotoMinOrderByAggregateInput = {
     id?: SortOrder
     url?: SortOrder
+    displayUrl?: SortOrder
     weddingId?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type AdminAuditLogCountOrderByAggregateInput = {
@@ -6140,26 +6207,6 @@ export namespace Prisma {
     action?: SortOrder
     email?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type WeddingSettingsCountOrderByAggregateInput = {
@@ -6196,24 +6243,6 @@ export namespace Prisma {
     secondaryCtaLabel?: SortOrder
     updatedAt?: SortOrder
     updatedBy?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type PhotoCreateNestedManyWithoutWeddingInput = {
@@ -6304,6 +6333,10 @@ export namespace Prisma {
     connect?: WeddingWhereUniqueInput
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type WeddingUpdateOneRequiredWithoutPhotosNestedInput = {
     create?: XOR<WeddingCreateWithoutPhotosInput, WeddingUncheckedCreateWithoutPhotosInput>
     connectOrCreate?: WeddingCreateOrConnectWithoutPhotosInput
@@ -6316,10 +6349,6 @@ export namespace Prisma {
     create?: XOR<WeddingCreateWithoutSettingsInput, WeddingUncheckedCreateWithoutSettingsInput>
     connectOrCreate?: WeddingCreateOrConnectWithoutSettingsInput
     connect?: WeddingWhereUniqueInput
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type WeddingUpdateOneRequiredWithoutSettingsNestedInput = {
@@ -6442,12 +6471,14 @@ export namespace Prisma {
   export type PhotoCreateWithoutWeddingInput = {
     id?: string
     url: string
+    displayUrl?: string | null
     createdAt?: Date | string
   }
 
   export type PhotoUncheckedCreateWithoutWeddingInput = {
     id?: string
     url: string
+    displayUrl?: string | null
     createdAt?: Date | string
   }
 
@@ -6510,6 +6541,7 @@ export namespace Prisma {
     NOT?: PhotoScalarWhereInput | PhotoScalarWhereInput[]
     id?: StringFilter<"Photo"> | string
     url?: StringFilter<"Photo"> | string
+    displayUrl?: StringNullableFilter<"Photo"> | string | null
     weddingId?: StringFilter<"Photo"> | string
     createdAt?: DateTimeFilter<"Photo"> | Date | string
   }
@@ -6646,24 +6678,28 @@ export namespace Prisma {
   export type PhotoCreateManyWeddingInput = {
     id?: string
     url: string
+    displayUrl?: string | null
     createdAt?: Date | string
   }
 
   export type PhotoUpdateWithoutWeddingInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    displayUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PhotoUncheckedUpdateWithoutWeddingInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    displayUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PhotoUncheckedUpdateManyWithoutWeddingInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    displayUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

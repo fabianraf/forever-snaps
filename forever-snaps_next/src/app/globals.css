@@ -22,15 +22,28 @@
   --color-feral-ink: var(--feral-ink);
   --color-feral-body: var(--feral-body);
   --color-feral-muted: var(--feral-muted);
-  --font-sans: var(--font-geist-sans);
-  --font-serif: var(--font-playfair);
-  --font-mono: var(--font-geist-mono);
+  --font-times: "Times New Roman", Times, serif;
+  --font-sans: var(--font-times);
+  --font-serif: var(--font-times);
+  --font-mono: var(--font-times);
 }
 
+html {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+html,
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-times);
+}
+
+body {
+  margin: 0;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Fondo cálido con brillo central y destellos sutiles */

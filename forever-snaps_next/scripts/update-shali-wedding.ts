@@ -7,9 +7,10 @@ dotenv.config();
 import { PrismaClient } from "../src/generated/prisma";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { getPgConnectionString } from "../src/lib/pgConnectionString";
 
-const OLD_SLUG = "shali-jhonatan";
-const SLUG = "shali-jonathan";
+const LEGACY_SLUGS = ["shali-jhonatan", "shali-jonathan"];
+const SLUG = "sharon_wedding";
 
 const SECONDARY_TEXT = `Nuestro amor se ve a través de sus ojos
 
@@ -17,12 +18,14 @@ Gracias por acompañarnos en nuestro sí para siempre.
 
 Cada risa, cada abrazo y cada baile de hoy es parte de nuestra historia. Si tomaste fotos o videos, súbelos aquí y ayúdanos a guardar este día para siempre.
 
-Con amor,
-ShaLi y Jonathan`;
+Con amor ❤️,
+ShaLi & Jonathan`;
 
 async function main() {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
+  let connectionString: string;
+  try {
+    connectionString = getPgConnectionString();
+  } catch {
     console.error("DATABASE_URL is not set.");
     process.exit(1);
   }
@@ -31,13 +34,25 @@ async function main() {
   const adapter = new PrismaPg(pool as any);
   const prisma = new PrismaClient({ adapter });
 
-  const legacy = await prisma.wedding.findUnique({ where: { slug: OLD_SLUG } });
-  if (legacy) {
+  const existing = await prisma.wedding.findUnique({ where: { slug: SLUG } });
+  const legacy = await prisma.wedding.findFirst({
+    where: { slug: { in: LEGACY_SLUGS } },
+  });
+
+  if (legacy && existing && legacy.id !== existing.id) {
+    await prisma.photo.updateMany({
+      where: { weddingId: legacy.id },
+      data: { weddingId: existing.id },
+    });
+    await prisma.weddingSettings.deleteMany({ where: { weddingId: legacy.id } });
+    await prisma.wedding.delete({ where: { id: legacy.id } });
+    console.log(`Merged "${legacy.slug}" into "${SLUG}" (photos moved, legacy removed).`);
+  } else if (legacy && !existing) {
     await prisma.wedding.update({
       where: { id: legacy.id },
       data: { slug: SLUG },
     });
-    console.log(`Renamed slug "${OLD_SLUG}" → "${SLUG}".`);
+    console.log(`Renamed slug "${legacy.slug}" → "${SLUG}".`);
   }
 
   const weddingData = {

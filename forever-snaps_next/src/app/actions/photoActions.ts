@@ -1,16 +1,17 @@
 'use server'
 
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"; // <-- Añadido DeleteObjectCommand
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { PrismaClient } from "../../generated/prisma";
 import crypto from "crypto";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { cookies } from "next/headers"; // <-- Añadido para Auth
-import { jwtVerify } from "jose"; // <-- Añadido para Auth
+import { cookies } from "next/headers";
+import { jwtVerify } from "jose";
+import { s3KeyFromPublicUrl } from "@/utils/photoUrls";
+import { getPgConnectionString } from "@/lib/pgConnectionString";
 
-const connectionString = process.env.DATABASE_URL;
-const pool = new Pool({ connectionString });
+const pool = new Pool({ connectionString: getPgConnectionString() });
 
 const adapter = new PrismaPg(pool as any);
 const prisma = new PrismaClient({ adapter });
@@ -23,90 +24,132 @@ const s3 = new S3Client({
   },
 });
 
+export type UploadVariant = "original" | "display";
+
+function buildPublicUrl(fileKey: string): string {
+  return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
+}
+
+async function deleteS3Key(fileKey: string) {
+  await s3.send(
+    new DeleteObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET_NAME!,
+      Key: fileKey,
+    })
+  );
+}
+
 // MÉTODOS PÚBLICOS (INVITADOS)
 
-export const getPresignedUrl = async (fileName: string, contentType: string) => {
-  const safeName = fileName ? fileName.replace(/[^a-zA-Z0-9.]/g, '_') : `foto_boda_${Date.now()}.jpg`;
-  const safeType = contentType || 'image/jpeg';
+export const getPresignedUrl = async (
+  fileName: string,
+  contentType: string,
+  variant: UploadVariant = "original",
+  fileId?: string
+) => {
+  const safeName = fileName ? fileName.replace(/[^a-zA-Z0-9.]/g, "_") : `foto_boda_${Date.now()}.jpg`;
+  const safeType = contentType || "image/jpeg";
+  const id = fileId ?? crypto.randomUUID();
 
-  const uniqueFileName = `photos/${crypto.randomUUID()}-${safeName}`;
+  const fileKey =
+    variant === "original"
+      ? `photos/original/${id}-${safeName}`
+      : `photos/display/${id}-${safeName.replace(/\.[^.]+$/, "") || "photo"}.jpg`;
+
+  const putContentType = variant === "display" ? "image/jpeg" : safeType;
 
   try {
     const command = new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME!,
-      Key: uniqueFileName,
-      ContentType: safeType,
+      Key: fileKey,
+      ContentType: putContentType,
     });
 
     const url = await getSignedUrl(s3, command, { expiresIn: 300 });
 
     return {
       url,
-      fileKey: uniqueFileName,
-      publicUrl: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${uniqueFileName}`
+      fileKey,
+      publicUrl: buildPublicUrl(fileKey),
+      fileId: id,
     };
   } catch (backendError) {
     console.error("Error al generar firma de AWS:", backendError);
     throw new Error("No se pudo generar el enlace de S3");
   }
-}
+};
 
-export const savePhotoRecord = async (weddingSlug: string, photoUrl: string) => {
+export const rollbackS3Upload = async (publicUrls: string[]) => {
+  for (const publicUrl of publicUrls) {
+    try {
+      await deleteS3Key(s3KeyFromPublicUrl(publicUrl));
+    } catch (error) {
+      console.error("Error al revertir subida S3:", error);
+    }
+  }
+};
+
+export const savePhotoRecord = async (
+  weddingSlug: string,
+  urls: { originalUrl: string; displayUrl: string }
+) => {
   const wedding = await prisma.wedding.findUnique({
-    where: { slug: weddingSlug }
+    where: { slug: weddingSlug },
   });
 
   if (!wedding) throw new Error("Wedding not found!");
 
   const photo = await prisma.photo.create({
     data: {
-      url: photoUrl,
+      url: urls.originalUrl,
+      displayUrl: urls.displayUrl,
       weddingId: wedding.id,
-    }
+    },
   });
 
   return photo;
-}
+};
 
 export const getWeddingDetails = async (slug: string) => {
   try {
     const wedding = await prisma.wedding.findUnique({
       where: { slug },
-      select: { names: true, date: true }
+      select: { names: true, date: true },
     });
     return wedding;
   } catch (error) {
     console.error("Error fetching wedding details:", error);
     return null;
   }
-}
+};
 
 export const getWeddingPhotos = async (slug: string) => {
   try {
     const photos = await prisma.photo.findMany({
       where: {
-        wedding: { slug: slug }
+        wedding: { slug: slug },
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: "desc",
       },
       select: {
         id: true,
         url: true,
+        displayUrl: true,
         createdAt: true,
-      }
+      },
     });
     return photos;
   } catch (error) {
     console.error("Error obteniendo la galería:", error);
     return [];
   }
-}
+};
 
 // MÉTODOS PRIVADOS (ADMINISTRADOR)
 
 async function verifyAdmin() {
-  const token = (await cookies()).get('admin_session')?.value;
+  const token = (await cookies()).get("admin_session")?.value;
   if (!token) throw new Error("No autorizado");
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -116,19 +159,24 @@ async function verifyAdmin() {
   }
 }
 
-export const deleteWeddingPhoto = async (photoId: string, imageUrl: string) => {
+export const deleteWeddingPhoto = async (
+  photoId: string,
+  imageUrl: string,
+  displayUrl?: string | null
+) => {
   await verifyAdmin();
   try {
-    const urlObj = new URL(imageUrl);
-    const fileKey = decodeURIComponent(urlObj.pathname.substring(1));
+    const keysToDelete = new Set<string>([s3KeyFromPublicUrl(imageUrl)]);
+    if (displayUrl) {
+      keysToDelete.add(s3KeyFromPublicUrl(displayUrl));
+    }
 
-    await s3.send(new DeleteObjectCommand({
-      Bucket: process.env.AWS_S3_BUCKET_NAME!,
-      Key: fileKey
-    }));
+    for (const fileKey of keysToDelete) {
+      await deleteS3Key(fileKey);
+    }
 
     await prisma.photo.delete({
-      where: { id: photoId }
+      where: { id: photoId },
     });
 
     return { success: true };
@@ -136,4 +184,4 @@ export const deleteWeddingPhoto = async (photoId: string, imageUrl: string) => {
     console.error("Error al eliminar foto:", error);
     return { error: "No se pudo eliminar la foto" };
   }
-}
+};

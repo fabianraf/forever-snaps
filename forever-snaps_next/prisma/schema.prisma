@@ -22,9 +22,10 @@ model Wedding {
 }
 
 model Photo {
-  id        String   @id @default(uuid())
-  url       String
-  weddingId String
+  id          String   @id @default(uuid())
+  url         String
+  displayUrl  String?
+  weddingId   String
   wedding   Wedding  @relation(fields: [weddingId], references: [id])
   createdAt DateTime @default(now())
 }

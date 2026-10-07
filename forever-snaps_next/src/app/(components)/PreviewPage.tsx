@@ -10,8 +10,8 @@ interface PreviewPageProps {
 
 const PreviewPage = ({ previewUrl, uploading, confirmPreviewUpload, cancelPreview, dictionary }: PreviewPageProps) => {
   return (
-    <main className="feral-page p-6 flex flex-col items-center justify-center font-sans text-feral-body">
-      <div className="feral-card p-6 sm:p-8 max-w-sm w-full flex flex-col items-center">
+    <main className="feral-page min-h-dvh w-full max-w-[100vw] box-border flex flex-col items-center justify-center font-sans text-feral-body overflow-x-hidden pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] py-6">
+      <div className="feral-card p-6 sm:p-8 w-full max-w-md mx-auto flex flex-col items-center box-border">
         <h2 className="text-2xl font-serif font-bold mb-2 text-feral-ink">{dictionary.PREVIEW_PAGE.TITLE}</h2>
         <p className="text-sm text-center mb-5">{dictionary.PREVIEW_PAGE.DESCRIPTION}</p>
 

@@ -5,6 +5,7 @@ import { getWeddingSettings, updateWeddingSettings } from "@/app/actions/setting
 import { getPresignedUrl, getWeddingPhotos, deleteWeddingPhoto } from "@/app/actions/photoActions";
 import { logoutAdmin } from "@/app/actions/authActions";
 import { useRouter } from "next/navigation";
+import { getPhotoDisplayUrl } from "@/utils/photoUrls";
 
 interface SettingsPageProps {
   params: Promise<{ slug: string, lang: string }>;
@@ -13,6 +14,7 @@ interface SettingsPageProps {
 type Photo = {
   id: string;
   url: string;
+  displayUrl?: string | null;
   createdAt: Date;
 };
 
@@ -93,12 +95,12 @@ export default function SettingsAdminPage({ params }: SettingsPageProps) {
     }
   };
 
-  const handleDeletePhoto = async (photoId: string, imageUrl: string) => {
+  const handleDeletePhoto = async (photoId: string, imageUrl: string, displayUrl?: string | null) => {
     const confirm = window.confirm("¿Estás seguro de que deseas eliminar esta foto permanentemente?");
     if (!confirm) return;
 
     setDeletingId(photoId);
-    const result = await deleteWeddingPhoto(photoId, imageUrl);
+    const result = await deleteWeddingPhoto(photoId, imageUrl, displayUrl);
 
     if (result.success) {
       setPhotos(prev => prev.filter(p => p.id !== photoId));
@@ -182,14 +184,14 @@ export default function SettingsAdminPage({ params }: SettingsPageProps) {
               {photos.map(photo => (
                 <div key={photo.id} className="relative group rounded-lg overflow-hidden border">
                   <img
-                    src={photo.url}
+                    src={getPhotoDisplayUrl(photo)}
                     alt="Wedding"
                     className={`w-full h-32 object-cover transition ${deletingId === photo.id ? 'opacity-50 grayscale' : ''}`}
                   />
 
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
                     <button
-                      onClick={() => handleDeletePhoto(photo.id, photo.url)}
+                      onClick={() => handleDeletePhoto(photo.id, photo.url, photo.displayUrl)}
                       disabled={deletingId === photo.id}
                       className="bg-red-600 text-white px-3 py-1 text-sm font-bold rounded hover:bg-red-700 disabled:bg-gray-500"
                     >

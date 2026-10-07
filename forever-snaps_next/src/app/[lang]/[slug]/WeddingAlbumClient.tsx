@@ -24,7 +24,7 @@ const WeddingAlbumClient = ({ slug, lang, dictionary, settings }: ClientProps) =
 
   return (
     <main
-      className="feral-page p-6 sm:p-10 flex flex-col items-center justify-center font-sans text-feral-ink relative"
+      className="feral-page min-h-dvh w-full max-w-[100vw] box-border flex flex-col items-center font-sans text-feral-ink relative overflow-x-hidden pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] py-6 sm:py-10"
       style={settings?.backgroundImageUrl ? {
         backgroundImage: `url(${settings.backgroundImageUrl})`,
         backgroundSize: 'cover',
@@ -33,7 +33,8 @@ const WeddingAlbumClient = ({ slug, lang, dictionary, settings }: ClientProps) =
     >
       {settings?.backgroundImageUrl && <div className="feral-page-overlay" aria-hidden />}
 
-      <div className="feral-card p-8 sm:p-10 max-w-md w-full text-center mt-auto mb-auto">
+      <div className="flex flex-1 flex-col items-center justify-center w-full max-w-md mx-auto z-10">
+      <div className="feral-card p-8 sm:p-10 w-full text-center box-border">
         <div className="flex justify-center mb-5 items-center">
           {weddingNames ? (
             <h1 className="text-3xl sm:text-4xl font-serif font-bold text-center text-feral-ink leading-tight">
@@ -81,8 +82,9 @@ const WeddingAlbumClient = ({ slug, lang, dictionary, settings }: ClientProps) =
           </button>
         </div>
       </div>
+      </div>
 
-      <footer className="w-full py-6 mt-auto text-center relative z-10">
+      <footer className="w-full max-w-md mx-auto py-6 text-center relative z-10 shrink-0">
         <a
           href="https://www.senirop.com"
           target="_blank"

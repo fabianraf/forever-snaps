@@ -7,8 +7,9 @@ import { PrismaClient } from "../../generated/prisma";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-const connectionString = process.env.DATABASE_URL;
-const pool = new Pool({ connectionString });
+import { getPgConnectionString } from "@/lib/pgConnectionString";
+
+const pool = new Pool({ connectionString: getPgConnectionString() });
 const adapter = new PrismaPg(pool as any);
 const prisma = new PrismaClient({ adapter });
 const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -42,8 +43,8 @@ export const loginAdmin = async (email: string, password: string) => {
     data: { action: "LOGIN", email }
   });
 
-  const wedding = await prisma.wedding.findUnique({ where: { slug: "shali-jonathan" } });
-  const targetSlug = wedding?.slug ?? "shali-jonathan";
+  const wedding = await prisma.wedding.findUnique({ where: { slug: "sharon_wedding" } });
+  const targetSlug = wedding?.slug ?? "sharon_wedding";
 
   return { success: true, slug: targetSlug };
 }

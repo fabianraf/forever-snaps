@@ -12,8 +12,8 @@ interface SuccessPageProps {
 const SuccessPage = ({ uploading, handleCameraSelect, slug, lang, dictionary }: SuccessPageProps) => {
   const router = useRouter();
   return (
-    <main className="feral-page p-6 flex flex-col items-center justify-center font-sans">
-      <div className="feral-card p-8 max-w-sm w-full text-center">
+    <main className="feral-page min-h-dvh w-full max-w-[100vw] box-border flex flex-col items-center justify-center font-sans overflow-x-hidden pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] py-6">
+      <div className="feral-card p-8 w-full max-w-md mx-auto text-center box-border">
         <div className="my-4 p-5 rounded-2xl bg-feral-cream border border-feral-orange/15">
           <div className="text-2xl mb-2">🎉 ✨ 🎉</div>
           <h4 className="text-feral-ink font-serif font-semibold text-lg">{dictionary.SUCCESS_PAGE.TITLE}</h4>

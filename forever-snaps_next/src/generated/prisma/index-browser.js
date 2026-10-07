@@ -130,6 +130,7 @@ exports.Prisma.WeddingScalarFieldEnum = {
 exports.Prisma.PhotoScalarFieldEnum = {
   id: 'id',
   url: 'url',
+  displayUrl: 'displayUrl',
   weddingId: 'weddingId',
   createdAt: 'createdAt'
 };

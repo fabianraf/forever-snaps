@@ -17,8 +17,20 @@ function getLocale(request: NextRequest): string {
   }
 }
 
+const CURRENT_SLUG = "sharon_wedding";
+const LEGACY_SLUGS = ["shali-jhonatan", "shali-jonathan"];
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  for (const legacySlug of LEGACY_SLUGS) {
+    if (pathname.includes(`/${legacySlug}`)) {
+      const url = request.nextUrl.clone();
+      url.pathname = pathname.replace(`/${legacySlug}`, `/${CURRENT_SLUG}`);
+      return NextResponse.redirect(url, 308);
+    }
+  }
+
   const pathnameHasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );

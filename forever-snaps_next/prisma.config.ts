@@ -3,12 +3,15 @@
 import dotenv from "dotenv";
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
+import { normalizePgConnectionString } from "./src/lib/pgConnectionString";
 
 dotenv.config({ path: '.env' });
 dotenv.config({ path: '.env.local' });
 
 if (!process.env.DATABASE_URL) {
   console.error("⚠️ ALERTA: No se encontró DATABASE_URL en tus variables de entorno locales.");
+} else {
+  process.env.DATABASE_URL = normalizePgConnectionString(process.env.DATABASE_URL);
 }
 
 export default defineConfig({

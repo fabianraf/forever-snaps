@@ -62,7 +62,7 @@ export default function SettingsAdminPage({ params }: SettingsPageProps) {
     if (!file) return;
     setSaving(true);
     try {
-      const { url, publicUrl } = await getPresignedUrl(file.name, file.type);
+      const { url, publicUrl } = await getPresignedUrl(slug, file.name, file.type, "background");
       await fetch(url, { method: 'PUT', body: file, headers: { 'Content-Type': file.type } });
       setFormData(prev => ({ ...prev, backgroundImageUrl: publicUrl }));
     } catch (error) {

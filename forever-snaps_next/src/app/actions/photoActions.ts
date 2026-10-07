@@ -24,7 +24,12 @@ const s3 = new S3Client({
   },
 });
 
-export type UploadVariant = "original" | "display";
+export type UploadVariant = "original" | "display" | "background";
+
+function sanitizeSlug(slug: string): string {
+  const safe = slug.replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "");
+  return safe || "unknown";
+}
 
 function buildPublicUrl(fileKey: string): string {
   return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
@@ -42,19 +47,31 @@ async function deleteS3Key(fileKey: string) {
 // MÉTODOS PÚBLICOS (INVITADOS)
 
 export const getPresignedUrl = async (
+  weddingSlug: string,
   fileName: string,
   contentType: string,
   variant: UploadVariant = "original",
   fileId?: string
 ) => {
+  const wedding = await prisma.wedding.findUnique({ where: { slug: weddingSlug } });
+  if (!wedding) {
+    throw new Error("Boda no encontrada");
+  }
+
+  const safeSlug = sanitizeSlug(weddingSlug);
   const safeName = fileName ? fileName.replace(/[^a-zA-Z0-9.]/g, "_") : `foto_boda_${Date.now()}.jpg`;
   const safeType = contentType || "image/jpeg";
   const id = fileId ?? crypto.randomUUID();
+  const displayBaseName = safeName.replace(/\.[^.]+$/, "") || "photo";
 
-  const fileKey =
-    variant === "original"
-      ? `photos/original/${id}-${safeName}`
-      : `photos/display/${id}-${safeName.replace(/\.[^.]+$/, "") || "photo"}.jpg`;
+  let fileKey: string;
+  if (variant === "original") {
+    fileKey = `photos/original/${safeSlug}/${id}-${safeName}`;
+  } else if (variant === "display") {
+    fileKey = `photos/display/${safeSlug}/${id}-${displayBaseName}.jpg`;
+  } else {
+    fileKey = `photos/backgrounds/${safeSlug}/${id}-${safeName}`;
+  }
 
   const putContentType = variant === "display" ? "image/jpeg" : safeType;
 

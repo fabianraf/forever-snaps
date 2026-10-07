@@ -61,7 +61,7 @@ export const useWeddingAlbum = (slug: string, dictionary: Dictionary) => {
           url: originalPresigned,
           publicUrl: originalUrl,
           fileId,
-        } = await getPresignedUrl(file.name, file.type || "image/jpeg", "original");
+        } = await getPresignedUrl(slug, file.name, file.type || "image/jpeg", "original");
 
         await uploadFileToS3(originalPresigned, file, file.type || "application/octet-stream");
 
@@ -74,6 +74,7 @@ export const useWeddingAlbum = (slug: string, dictionary: Dictionary) => {
           });
 
           const { url: displayPresigned, publicUrl } = await getPresignedUrl(
+            slug,
             file.name,
             "image/jpeg",
             "display",

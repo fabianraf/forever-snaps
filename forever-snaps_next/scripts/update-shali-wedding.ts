@@ -18,7 +18,7 @@ Gracias por acompañarnos en nuestro sí para siempre.
 Cada risa, cada abrazo y cada baile de hoy es parte de nuestra historia. Si tomaste fotos o videos, súbelos aquí y ayúdanos a guardar este día para siempre.
 
 Con amor,
-ShaLi & Jonathan`;
+ShaLi y Jonathan`;
 
 async function main() {
   const connectionString = process.env.DATABASE_URL;
@@ -41,7 +41,7 @@ async function main() {
   }
 
   const weddingData = {
-    names: "ShaLi y Jonathan",
+    names: "ShaLi & Jonathan",
     date: new Date("2026-10-10T00:00:00.000Z"),
   };
 

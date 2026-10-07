@@ -2,7 +2,7 @@ export const DICTIONARY = {
   ES: {
     COMMON: { UPLOADING: "Subiendo...", CANCEL: "Cancelar", SUBMIT: "¡Subir Foto!", BACK_TO_TOP: "Volver arriba" },
     ALBUM_PAGE: {
-      DESCRIPTION: "Nuestro amor se ve a través de sus ojos\n\nGracias por acompañarnos en nuestro sí para siempre.\n\nCada risa, cada abrazo y cada baile de hoy es parte de nuestra historia. Si tomaste fotos o videos, súbelos aquí y ayúdanos a guardar este día para siempre.\n\nCon amor,\nShaLi & Jonathan",
+      DESCRIPTION: "Nuestro amor se ve a través de sus ojos\n\nGracias por acompañarnos en nuestro sí para siempre.\n\nCada risa, cada abrazo y cada baile de hoy es parte de nuestra historia. Si tomaste fotos o videos, súbelos aquí y ayúdanos a guardar este día para siempre.\n\nCon amor,\nShaLi y Jonathan",
       TAKE_PHOTO: " Tomar foto",
       UPLOAD_GALLERY: "Subir desde galería",
       VIEW_GALLERY_BTN: "↓ Ver fotos del evento",
@@ -17,7 +17,7 @@ export const DICTIONARY = {
   EN: {
     COMMON: { UPLOADING: "Uploading...", CANCEL: "Cancel", SUBMIT: "Upload Photo!", BACK_TO_TOP: "Back to top" },
     ALBUM_PAGE: {
-      DESCRIPTION: "Our love is seen through your eyes\n\nThank you for joining us as we said yes forever.\n\nEvery laugh, every hug, and every dance today is part of our story. If you took photos or videos, upload them here and help us keep this day forever.\n\nWith love,\nShaLi & Jonathan",
+      DESCRIPTION: "Our love is seen through your eyes\n\nThank you for joining us as we said yes forever.\n\nEvery laugh, every hug, and every dance today is part of our story. If you took photos or videos, upload them here and help us keep this day forever.\n\nWith love,\nShaLi y Jonathan",
       TAKE_PHOTO: "Take photo",
       UPLOAD_GALLERY: "Upload from gallery",
       VIEW_GALLERY_BTN: "↓ View event photos",

@@ -8,7 +8,8 @@ import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
-import { s3KeyFromPublicUrl } from "@/utils/photoUrls";
+import { s3KeyFromPublicUrl, tryS3KeyFromPublicUrl } from "@/utils/photoUrls";
+import { revalidatePath } from "next/cache";
 import { getPgConnectionString } from "@/lib/pgConnectionString";
 
 const pool = new Pool({ connectionString: getPgConnectionString() });
@@ -177,24 +178,61 @@ async function verifyAdmin() {
 }
 
 export const deleteWeddingPhoto = async (
+  weddingSlug: string,
   photoId: string,
   imageUrl: string,
   displayUrl?: string | null
 ) => {
-  await verifyAdmin();
   try {
-    const keysToDelete = new Set<string>([s3KeyFromPublicUrl(imageUrl)]);
-    if (displayUrl) {
-      keysToDelete.add(s3KeyFromPublicUrl(displayUrl));
+    await verifyAdmin();
+  } catch {
+    return { error: "No autorizado" };
+  }
+
+  try {
+    const photo = await prisma.photo.findUnique({
+      where: { id: photoId },
+      include: { wedding: { select: { slug: true } } },
+    });
+
+    if (!photo) {
+      return { error: "Foto no encontrada" };
+    }
+
+    if (photo.wedding.slug !== weddingSlug) {
+      return { error: "No autorizado" };
+    }
+
+    const candidateUrls = new Set<string>(
+      [photo.url, photo.displayUrl, imageUrl, displayUrl].filter(
+        (u): u is string => typeof u === "string" && u.trim() !== ""
+      )
+    );
+
+    const keysToDelete = new Set<string>();
+    for (const url of candidateUrls) {
+      const key = tryS3KeyFromPublicUrl(url);
+      if (key) keysToDelete.add(key);
     }
 
     for (const fileKey of keysToDelete) {
-      await deleteS3Key(fileKey);
+      try {
+        await deleteS3Key(fileKey);
+      } catch (s3Error) {
+        console.error("Error eliminando objeto S3 (se continúa con BD):", fileKey, s3Error);
+      }
     }
 
     await prisma.photo.delete({
       where: { id: photoId },
     });
+
+    const slug = photo.wedding.slug;
+    for (const lang of ["es", "en"] as const) {
+      revalidatePath(`/${lang}/${slug}/gallery`);
+      revalidatePath(`/${lang}/${slug}`);
+    }
+    revalidatePath(`/album/${slug}/gallery`);
 
     return { success: true };
   } catch (error) {

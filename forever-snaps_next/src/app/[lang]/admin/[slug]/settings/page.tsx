@@ -100,15 +100,26 @@ export default function SettingsAdminPage({ params }: SettingsPageProps) {
     if (!confirm) return;
 
     setDeletingId(photoId);
-    const result = await deleteWeddingPhoto(photoId, imageUrl, displayUrl);
+    setMessage('');
+    try {
+      const result = await deleteWeddingPhoto(slug, photoId, imageUrl, displayUrl);
 
-    if (result.success) {
-      setPhotos(prev => prev.filter(p => p.id !== photoId));
-      setMessage('Foto eliminada correctamente.');
-    } else {
-      setMessage(result.error || 'Error al eliminar foto.');
+      if (result.success) {
+        setPhotos(prev => prev.filter(p => p.id !== photoId));
+        setMessage('Foto eliminada correctamente.');
+        router.refresh();
+      } else {
+        if (result.error === "No autorizado") {
+          router.push(`/${lang}/admin/login`);
+          return;
+        }
+        setMessage(result.error || 'Error al eliminar foto.');
+      }
+    } catch {
+      setMessage('Error de conexión al eliminar la foto.');
+    } finally {
+      setDeletingId(null);
     }
-    setDeletingId(null);
   };
 
   const handleLogout = async () => {

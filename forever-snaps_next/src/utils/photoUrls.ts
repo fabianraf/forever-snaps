@@ -11,3 +11,11 @@ export function s3KeyFromPublicUrl(imageUrl: string): string {
   const urlObj = new URL(imageUrl);
   return decodeURIComponent(urlObj.pathname.substring(1));
 }
+
+export function tryS3KeyFromPublicUrl(imageUrl: string): string | null {
+  try {
+    return s3KeyFromPublicUrl(imageUrl);
+  } catch {
+    return null;
+  }
+}

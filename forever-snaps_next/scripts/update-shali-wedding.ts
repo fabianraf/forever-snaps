@@ -16,7 +16,9 @@ const SECONDARY_TEXT = `Nuestro amor se ve a través de sus ojos
 
 Gracias por acompañarnos en nuestro sí para siempre.
 
-Cada risa, cada abrazo y cada baile de hoy es parte de nuestra historia. Si tomaste fotos o videos, súbelos aquí y ayúdanos a guardar este día para siempre.
+Cada risa, cada abrazo y cada baile de hoy es parte de nuestra historia.
+
+Si tomaste fotos, súbelas aquí y ayúdanos a guardar este día para siempre.
 
 Con amor ❤️,
 ShaLi & Jonathan`;
